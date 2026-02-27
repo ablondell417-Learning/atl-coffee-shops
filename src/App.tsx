@@ -4,6 +4,7 @@ import { useFavorites } from './hooks/useFavorites';
 import { useNotes } from './hooks/useNotes';
 import { FilterBar } from './components/FilterBar';
 import { ShopGrid } from './components/ShopGrid';
+import { NeighborhoodGrid } from './components/NeighborhoodGrid';
 import { ShopDetailModal } from './components/ShopDetailModal';
 import { AuthModal } from './components/AuthModal';
 
@@ -85,20 +86,35 @@ function App() {
         {/* Main content */}
         <main className="flex-1 overflow-y-auto">
           <div className="px-8 py-8">
-            <div className="flex items-baseline gap-3 mb-6">
-              <h2 className="text-lg font-semibold text-white drop-shadow">
-                {selectedNeighborhood ?? 'All Neighborhoods'}
-              </h2>
-              <span className="text-sm text-white/60">
-                {filteredShops.length} {filteredShops.length === 1 ? 'shop' : 'shops'}
-              </span>
-            </div>
-            <ShopGrid
-              shops={filteredShops}
-              favorites={favorites}
-              onToggleFavorite={toggleFavorite}
-              onOpenDetail={setActiveShopId}
-            />
+            {selectedNeighborhood === null ? (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-white drop-shadow">Explore Atlanta's Coffee Scene</h2>
+                  <p className="text-white/60 text-sm mt-1">Select a neighborhood to discover local shops</p>
+                </div>
+                <NeighborhoodGrid
+                  shops={coffeeShops}
+                  onSelectNeighborhood={setSelectedNeighborhood}
+                />
+              </>
+            ) : (
+              <>
+                <div className="flex items-baseline gap-3 mb-6">
+                  <h2 className="text-lg font-semibold text-white drop-shadow">
+                    {selectedNeighborhood}
+                  </h2>
+                  <span className="text-sm text-white/60">
+                    {filteredShops.length} {filteredShops.length === 1 ? 'shop' : 'shops'}
+                  </span>
+                </div>
+                <ShopGrid
+                  shops={filteredShops}
+                  favorites={favorites}
+                  onToggleFavorite={toggleFavorite}
+                  onOpenDetail={setActiveShopId}
+                />
+              </>
+            )}
           </div>
         </main>
       </div>

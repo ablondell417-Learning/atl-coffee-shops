@@ -52,7 +52,7 @@ export const coffeeShops: CoffeeShop[] = [
     address: '480 John Wesley Dobbs Ave NE, Atlanta, GA 30312',
     googleRating: 4.5,
     googleReviewCount: 978,
-    imageUrl: 'https://images.unsplash.com/photo-1442975631134-2de9f2828c83?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=800&auto=format&fit=crop',
     website: 'https://www.condesacoffee.com',
     description: 'A local staple with Latin American roots, serving creative espresso drinks and rotating single-origin pour-overs in a bright, plant-filled space.',
     drinkOfTheDay: 'Horchata Latte',
