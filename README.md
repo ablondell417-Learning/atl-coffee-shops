@@ -6,11 +6,15 @@ A personal coffee enthusiast web app for discovering and tracking coffee shops a
 
 ## Features
 
-- Browse 10 real Atlanta coffee shops across multiple neighborhoods
+- **Neighborhood landing page** — clickable photo cards for each Atlanta neighborhood; selecting one reveals its shops
+- Browse 15 real Atlanta coffee shops across 13 neighborhoods
 - Filter shops by neighborhood using a persistent left sidebar
-- Click any card to open a full detail modal
+- Click any shop card to open a full detail modal
 - Save favorites with the heart button (persists after refresh)
 - Write personal notes per shop (autosaved to localStorage)
+- Drink of the day and matcha availability indicator on every card and modal
+- Full weekly hours with today's hours highlighted on each shop
+- Atlanta skyline background with glassmorphism cards and sidebar
 - Log In and Sign Up via a tabbed auth modal (mock UI, ready for backend integration)
 
 ---
@@ -41,17 +45,19 @@ A personal coffee enthusiast web app for discovering and tracking coffee shops a
     ├── types/
     │   └── index.ts           # CoffeeShop and UserData interfaces
     ├── data/
-    │   └── shops.ts           # Static mock data for 10 Atlanta coffee shops
+    │   ├── shops.ts           # Static mock data for 15 Atlanta coffee shops
+    │   └── neighborhoods.ts   # Per-neighborhood Unsplash image URLs + fallback
     ├── hooks/
     │   ├── useLocalStorage.ts # Generic hook: useLocalStorage<T>(key, defaultValue)
     │   ├── useFavorites.ts    # favorites: string[], toggleFavorite(id)
     │   └── useNotes.ts        # notes: Record<string, string>, setNote(id, text)
     └── components/
-        ├── FilterBar.tsx       # Vertical sidebar: neighborhood list with per-neighborhood counts
-        ├── ShopCard.tsx        # Card: image, name, neighborhood, rating, favorite button
-        ├── ShopGrid.tsx        # Responsive grid of ShopCards with empty state
-        ├── ShopDetailModal.tsx # Modal: full details, website link, notes textarea
-        └── AuthModal.tsx       # Tabbed Log In / Sign Up modal (mock, ready for real auth)
+        ├── FilterBar.tsx         # Vertical sidebar: neighborhood list with per-neighborhood counts
+        ├── NeighborhoodGrid.tsx  # Landing page: photo card per neighborhood, routes into shop view
+        ├── ShopCard.tsx          # Card: image, name, rating, drink of day, matcha, hours, favorite
+        ├── ShopGrid.tsx          # Responsive grid of ShopCards with empty state
+        ├── ShopDetailModal.tsx   # Modal: full details, weekly hours, drink of day, notes textarea
+        └── AuthModal.tsx         # Tabbed Log In / Sign Up modal (mock, ready for real auth)
 ```
 
 ---
@@ -104,6 +110,11 @@ The following config files were created to replicate what `npm create vite@lates
 
 `src/types/index.ts`:
 ```typescript
+interface WeeklyHours {
+  Monday: string; Tuesday: string; Wednesday: string; Thursday: string;
+  Friday: string; Saturday: string; Sunday: string;
+}
+
 interface CoffeeShop {
   id: string;
   name: string;
@@ -114,12 +125,15 @@ interface CoffeeShop {
   imageUrl: string;
   website?: string;
   description?: string;
+  drinkOfTheDay: string;
+  offersMatcha: boolean;
+  hours: WeeklyHours;
 }
 ```
 
 ### 6. Add mock data
 
-`src/data/shops.ts` — 10 Atlanta coffee shops with real names, addresses, neighborhoods, plausible ratings, and Unsplash images:
+`src/data/shops.ts` — 15 Atlanta coffee shops across 13 neighborhoods:
 
 | Shop | Neighborhood |
 |---|---|
@@ -133,6 +147,13 @@ interface CoffeeShop {
 | Café Intermezzo | Midtown |
 | Spiller Park Coffee | Ponce City Market |
 | Chattahoochee Coffee Company | Buckhead |
+| Octane Coffee | Grant Park |
+| Rev Coffee Roasters | Smyrna |
+| Beehive Coffee | East Atlanta |
+| Perennial Coffee | Summerhill |
+| Alon's Bakery & Market | Virginia-Highland |
+
+`src/data/neighborhoods.ts` — Unsplash image URL for each neighborhood, used by the landing page grid.
 
 ### 7. Build custom hooks
 
@@ -142,17 +163,20 @@ interface CoffeeShop {
 
 ### 8. Build components
 
-- `FilterBar` — derives unique neighborhoods from the shop list; renders "All" + one pill per neighborhood; highlights the active filter; shows filtered shop count
-- `ShopCard` — image (aspect-video), name, neighborhood badge, star rating, review count, address; heart button in top-right that stops click propagation; hover scale on image
+- `FilterBar` — derives unique neighborhoods from the shop list; renders "All" + one row per neighborhood; highlights the active filter; shows per-neighborhood shop count
+- `NeighborhoodGrid` — landing page grid of photo cards; one card per neighborhood with image, gradient overlay, frosted-glass shop count pill, and hover scale
+- `ShopCard` — image, name, rating, neighborhood badge, drink of the day, matcha indicator, address, today's hours; heart button in top-right
 - `ShopGrid` — responsive CSS grid (1 → 2 → 3 → 4 columns); empty state with ☕ icon
-- `ShopDetailModal` — full-screen backdrop (click to close), Escape key to close, body scroll locked while open; larger image, all shop details, website link, notes textarea with autosave
+- `ShopDetailModal` — full-screen backdrop (click to close), Escape key to close; larger image, all shop details, drink-of-the-day banner, matcha badge, full weekly hours table (today highlighted), website link, notes textarea with autosave
 
 ### 9. Wire up App.tsx
 
-- State: `selectedNeighborhood` (filter), `activeShopId` (modal)
+- State: `selectedNeighborhood` (filter), `activeShopId` (modal), `authModal`
 - Derives `filteredShops` from full list on every render
 - Passes hooks (favorites, notes) down as props
-- Renders: header → FilterBar → ShopGrid → ShopDetailModal (conditional)
+- When `selectedNeighborhood === null`: renders `NeighborhoodGrid` (landing page)
+- When a neighborhood is selected: renders `ShopGrid` with filtered results
+- Clicking "All shops" in the sidebar always returns to the neighborhood landing page
 
 ### 10. Rework layout with vertical sidebar and auth UI
 
@@ -200,7 +224,29 @@ A full security audit was performed and the following vulnerabilities were ident
 - Added password confirmation validation in `SignupForm.handleSubmit` — blocks submission and shows an inline error if the two passwords don't match
 - Confirm password field highlights red when there's a mismatch
 
-### 12. Install dependencies and run
+### 12. Expand shops and add drink of day, matcha, and hours
+
+- Shop count expanded from 10 to 15, adding Grant Park, Smyrna, East Atlanta, Summerhill, and Virginia-Highland
+- Added `drinkOfTheDay`, `offersMatcha`, and `WeeklyHours` to the `CoffeeShop` type
+- `ShopCard` now shows drink of the day, a green matcha indicator on its own line, and today's hours (red if closed)
+- `ShopDetailModal` now shows a drink-of-the-day banner, matcha badge below it, and a full weekly hours table with today's row highlighted in amber
+
+### 13. Atlanta skyline background and glassmorphism UI
+
+- Fixed full-screen background: Atlanta skyline Unsplash photo with a `bg-black/50` overlay
+- Header: `bg-amber-900/80 backdrop-blur-sm`
+- Sidebar: `bg-black/40 backdrop-blur-md` with white text
+- Shop cards: `bg-white/70 backdrop-blur-md` frosted glass, brightens on hover
+- Page headings updated to `text-white` with `drop-shadow` for readability over the photo
+
+### 14. Neighborhood landing page and image fix
+
+- Landing page replaced with `NeighborhoodGrid`: one photo card per neighborhood (image, gradient overlay, shop count pill, hover scale)
+- Selecting a neighborhood in the grid or sidebar drills into that neighborhood's shops; "All shops" returns to the grid
+- Added `src/data/neighborhoods.ts` with per-neighborhood Unsplash image URLs
+- Fixed broken image URL for Condesa Coffee (Inman Park)
+
+### 15. Install dependencies and run
 
 ```bash
 npm install
