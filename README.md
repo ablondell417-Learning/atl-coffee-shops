@@ -179,7 +179,28 @@ interface CoffeeShop {
 - Cross-links between forms ("Don't have an account? Sign up" / "Already have an account? Log in")
 - Closes via X button, backdrop click, or Escape key
 
-### 11. Install dependencies and run
+### 11. Security hardening
+
+A full security audit was performed and the following vulnerabilities were identified and fixed:
+
+**`index.html` — 3 security headers added**
+- `Content-Security-Policy` — restricts what resources the browser can load; blocks XSS, inline script injection, and unauthorized external connections. Allows `img-src https:` for Unsplash images and `connect-src ws: wss:` for Vite HMR.
+- `X-Frame-Options: DENY` — prevents the app from being embedded in an iframe (clickjacking protection)
+- `Referrer-Policy: strict-origin-when-cross-origin` — prevents leaking the full app URL to external sites when users click shop website links
+
+**`src/components/ShopDetailModal.tsx` — external URL validation**
+- Added `isValidHttpUrl()` helper using the native `URL` constructor to validate that `shop.website` is a legitimate `http:` or `https:` URL before rendering it as a link
+- Replaced the regex-based hostname display with `new URL(shop.website).hostname` for safe, accurate extraction
+- Prevents `javascript:`, `data:`, or other protocol injection if data ever comes from an external source
+
+**`src/components/AuthModal.tsx` — auth form hardening**
+- Added `autoComplete="email"` on all email fields
+- Added `autoComplete="current-password"` on the login password field
+- Added `autoComplete="new-password"` on both signup password fields
+- Added password confirmation validation in `SignupForm.handleSubmit` — blocks submission and shows an inline error if the two passwords don't match
+- Confirm password field highlights red when there's a mismatch
+
+### 12. Install dependencies and run
 
 ```bash
 npm install

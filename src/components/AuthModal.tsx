@@ -96,6 +96,7 @@ function LoginForm({ onClose, onSwitchToSignup }: { onClose: () => void; onSwitc
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
@@ -107,6 +108,7 @@ function LoginForm({ onClose, onSwitchToSignup }: { onClose: () => void; onSwitc
           <input
             type="password"
             required
+            autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
@@ -143,9 +145,15 @@ function SignupForm({ onClose, onSwitchToLogin }: { onClose: () => void; onSwitc
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirm) {
+      setError('Passwords do not match.');
+      return;
+    }
+    setError('');
     // Mock signup — replace with real auth later
     onClose();
   };
@@ -163,6 +171,7 @@ function SignupForm({ onClose, onSwitchToLogin }: { onClose: () => void; onSwitc
           <input
             type="text"
             required
+            autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name"
@@ -174,6 +183,7 @@ function SignupForm({ onClose, onSwitchToLogin }: { onClose: () => void; onSwitc
           <input
             type="email"
             required
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
@@ -185,6 +195,7 @@ function SignupForm({ onClose, onSwitchToLogin }: { onClose: () => void; onSwitc
           <input
             type="password"
             required
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
@@ -196,11 +207,13 @@ function SignupForm({ onClose, onSwitchToLogin }: { onClose: () => void; onSwitc
           <input
             type="password"
             required
+            autoComplete="new-password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="••••••••"
-            className="w-full rounded-xl border border-stone-200 px-4 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className={`w-full rounded-xl border px-4 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-400 ${error ? 'border-red-400' : 'border-stone-200'}`}
           />
+          {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
         </div>
       </div>
 
