@@ -1,3 +1,13 @@
+export interface WeeklyHours {
+  Monday: string;
+  Tuesday: string;
+  Wednesday: string;
+  Thursday: string;
+  Friday: string;
+  Saturday: string;
+  Sunday: string;
+}
+
 export interface CoffeeShop {
   id: string;
   name: string;
@@ -8,6 +18,9 @@ export interface CoffeeShop {
   imageUrl: string;
   website?: string;
   description?: string;
+  drinkOfTheDay: string;
+  offersMatcha: boolean;
+  hours: WeeklyHours;
 }
 
 export interface UserData {

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { CoffeeShop } from '../types';
+import { CoffeeShop, WeeklyHours } from '../types';
 
 function isValidHttpUrl(str: string): boolean {
   try {
@@ -8,6 +8,13 @@ function isValidHttpUrl(str: string): boolean {
   } catch {
     return false;
   }
+}
+
+const DAYS: (keyof WeeklyHours)[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+function getTodayName(): keyof WeeklyHours {
+  const days: (keyof WeeklyHours)[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[new Date().getDay()];
 }
 
 interface ShopDetailModalProps {
@@ -45,14 +52,13 @@ export function ShopDetailModal({
   onClose,
 }: ShopDetailModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const today = getTodayName();
 
-  // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     document.addEventListener('keydown', handleKey);
-    // Prevent body scroll while modal is open
     document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', handleKey);
@@ -78,7 +84,6 @@ export function ShopDetailModal({
             alt={shop.name}
             className="w-full h-full object-cover"
           />
-          {/* Close button */}
           <button
             onClick={onClose}
             className="absolute top-3 right-3 w-9 h-9 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-colors"
@@ -88,7 +93,6 @@ export function ShopDetailModal({
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          {/* Neighborhood badge */}
           <span className="absolute bottom-3 left-3 bg-amber-700 text-white text-xs font-semibold px-3 py-1 rounded-full">
             {shop.neighborhood}
           </span>
@@ -96,7 +100,7 @@ export function ShopDetailModal({
 
         {/* Content */}
         <div className="p-6">
-          {/* Title row */}
+          {/* Title + favorite */}
           <div className="flex items-start justify-between gap-4 mb-3">
             <h2 className="text-2xl font-bold text-stone-900">{shop.name}</h2>
             <button
@@ -115,6 +119,23 @@ export function ShopDetailModal({
           </div>
 
           <StarRatingLarge rating={shop.googleRating} reviewCount={shop.googleReviewCount} />
+
+          {/* Drink of the day + matcha indicator */}
+          <div className="mt-4 flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
+            <span className="text-base">☕</span>
+            <div>
+              <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Drink of the Day</span>
+              <p className="text-sm font-medium text-stone-800">{shop.drinkOfTheDay}</p>
+            </div>
+            {shop.offersMatcha && (
+              <div className="ml-auto flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-green-500">
+                  <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clipRule="evenodd" />
+                </svg>
+                Matcha available
+              </div>
+            )}
+          </div>
 
           {/* Address + website */}
           <div className="mt-4 space-y-2">
@@ -140,6 +161,34 @@ export function ShopDetailModal({
                 </a>
               </div>
             )}
+          </div>
+
+          {/* Weekly hours */}
+          <div className="mt-4">
+            <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-2">Hours</h3>
+            <div className="rounded-xl border border-stone-100 overflow-hidden">
+              {DAYS.map((day) => {
+                const isToday = day === today;
+                const hours = shop.hours[day];
+                const isClosed = hours === 'Closed';
+                return (
+                  <div
+                    key={day}
+                    className={`flex items-center justify-between px-4 py-2 text-sm ${
+                      isToday ? 'bg-amber-50 font-semibold' : 'odd:bg-stone-50'
+                    }`}
+                  >
+                    <span className={isToday ? 'text-amber-800' : 'text-stone-600'}>
+                      {day}
+                      {isToday && <span className="ml-2 text-xs text-amber-600">(today)</span>}
+                    </span>
+                    <span className={isClosed ? 'text-red-500' : isToday ? 'text-amber-800' : 'text-stone-700'}>
+                      {hours}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Description */}
