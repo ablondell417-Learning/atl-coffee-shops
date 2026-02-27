@@ -121,14 +121,16 @@ export function ShopDetailModal({
           <StarRatingLarge rating={shop.googleRating} reviewCount={shop.googleReviewCount} />
 
           {/* Drink of the day + matcha indicator */}
-          <div className="mt-4 flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-xl px-4 py-2.5">
-            <span className="text-base">☕</span>
-            <div>
-              <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Drink of the Day</span>
-              <p className="text-sm font-medium text-stone-800">{shop.drinkOfTheDay}</p>
+          <div className="mt-4 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">☕</span>
+              <div>
+                <span className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Drink of the Day</span>
+                <p className="text-sm font-medium text-stone-800">{shop.drinkOfTheDay}</p>
+              </div>
             </div>
             {shop.offersMatcha && (
-              <div className="ml-auto flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">
+              <div className="mt-2 flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full w-fit">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5 text-green-500">
                   <path fillRule="evenodd" d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" clipRule="evenodd" />
                 </svg>

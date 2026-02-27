@@ -13,9 +13,9 @@ export function FilterBar({ shops, selectedNeighborhood, onSelectNeighborhood }:
     shops.filter((s) => s.neighborhood === neighborhood).length;
 
   return (
-    <aside className="w-56 shrink-0 bg-white border-r border-stone-200 min-h-full">
+    <aside className="w-56 shrink-0 bg-black/40 backdrop-blur-md border-r border-white/10 min-h-full">
       <div className="sticky top-0 p-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-stone-400 mb-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-white/50 mb-3">
           Neighborhoods
         </p>
         <ul className="space-y-0.5">
@@ -25,11 +25,11 @@ export function FilterBar({ shops, selectedNeighborhood, onSelectNeighborhood }:
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedNeighborhood === null
                   ? 'bg-amber-700 text-white'
-                  : 'text-stone-600 hover:bg-stone-100'
+                  : 'text-white/80 hover:bg-white/10'
               }`}
             >
               <span>All shops</span>
-              <span className={`text-xs ${selectedNeighborhood === null ? 'text-amber-200' : 'text-stone-400'}`}>
+              <span className={`text-xs ${selectedNeighborhood === null ? 'text-amber-200' : 'text-white/40'}`}>
                 {shops.length}
               </span>
             </button>
@@ -41,11 +41,11 @@ export function FilterBar({ shops, selectedNeighborhood, onSelectNeighborhood }:
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
                   selectedNeighborhood === n
                     ? 'bg-amber-700 text-white font-medium'
-                    : 'text-stone-600 hover:bg-stone-100'
+                    : 'text-white/80 hover:bg-white/10'
                 }`}
               >
                 <span>{n}</span>
-                <span className={`text-xs ${selectedNeighborhood === n ? 'text-amber-200' : 'text-stone-400'}`}>
+                <span className={`text-xs ${selectedNeighborhood === n ? 'text-amber-200' : 'text-white/40'}`}>
                   {countFor(n)}
                 </span>
               </button>

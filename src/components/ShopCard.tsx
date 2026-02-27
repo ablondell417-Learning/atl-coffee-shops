@@ -41,7 +41,7 @@ export function ShopCard({ shop, isFavorite, onToggleFavorite, onOpenDetail }: S
 
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-100 hover:shadow-md transition-shadow cursor-pointer group"
+      className="bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-sm border border-white/60 hover:shadow-lg hover:bg-white/80 transition-all cursor-pointer group"
       onClick={() => onOpenDetail(shop.id)}
     >
       {/* Image */}
@@ -87,12 +87,19 @@ export function ShopCard({ shop, isFavorite, onToggleFavorite, onOpenDetail }: S
           <span className="text-xs text-stone-400">({shop.googleReviewCount.toLocaleString()} reviews)</span>
         </div>
 
-        {/* Drink of the day + matcha indicator */}
-        <div className="flex items-center gap-1.5 mb-2">
+        {/* Drink of the day */}
+        <div className="flex items-center gap-1.5 mb-1">
           <span className="text-xs text-stone-500">☕</span>
           <span className="text-xs text-stone-600 truncate">{shop.drinkOfTheDay}</span>
-          {shop.offersMatcha && <MatchaIcon />}
         </div>
+
+        {/* Matcha indicator */}
+        {shop.offersMatcha && (
+          <div className="flex items-center gap-1 mb-2">
+            <MatchaIcon />
+            <span className="text-xs text-green-600 font-medium">Matcha available</span>
+          </div>
+        )}
 
         {/* Address */}
         <p className="text-xs text-stone-500 truncate mb-1">{shop.address}</p>

@@ -23,9 +23,20 @@ function App() {
   const activeShop = activeShopId ? coffeeShops.find((s) => s.id === activeShopId) : null;
 
   return (
-    <div className="h-screen flex flex-col bg-stone-50">
+    <div
+      className="h-screen flex flex-col relative"
+      style={{
+        backgroundImage: 'url(https://images.unsplash.com/photo-1575917649705-5b59aaa12e6b?w=1920&auto=format&fit=crop&q=80)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/50 pointer-events-none z-0" />
+
       {/* Header */}
-      <header className="bg-amber-800 text-white shrink-0">
+      <header className="relative z-10 bg-amber-900/80 backdrop-blur-sm text-white shrink-0 border-b border-white/10">
         <div className="px-6 py-4 flex items-center gap-3">
           <span className="text-3xl">☕</span>
           <div>
@@ -63,7 +74,7 @@ function App() {
       </header>
 
       {/* Body: sidebar + content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="relative z-10 flex flex-1 overflow-hidden">
         {/* Left sidebar */}
         <FilterBar
           shops={coffeeShops}
@@ -75,10 +86,10 @@ function App() {
         <main className="flex-1 overflow-y-auto">
           <div className="px-8 py-8">
             <div className="flex items-baseline gap-3 mb-6">
-              <h2 className="text-lg font-semibold text-stone-800">
+              <h2 className="text-lg font-semibold text-white drop-shadow">
                 {selectedNeighborhood ?? 'All Neighborhoods'}
               </h2>
-              <span className="text-sm text-stone-400">
+              <span className="text-sm text-white/60">
                 {filteredShops.length} {filteredShops.length === 1 ? 'shop' : 'shops'}
               </span>
             </div>
