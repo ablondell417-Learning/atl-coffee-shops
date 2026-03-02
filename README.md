@@ -8,13 +8,19 @@ A personal coffee enthusiast web app for discovering and tracking coffee shops a
 
 - **Neighborhood landing page** — clickable photo cards for each Atlanta neighborhood; selecting one reveals its shops
 - Browse 15 real Atlanta coffee shops across 13 neighborhoods
-- Filter shops by neighborhood using a persistent left sidebar
+- **Horizontal filter bar** with four independent filters:
+  - **Search** — matches against shop name, neighborhood, description, and address
+  - **Neighborhood dropdown** — drill into a single neighborhood
+  - **Matcha toggle** — show only shops that serve matcha
+  - **Open Now toggle** — show only shops currently within their operating hours
+  - **Clear filters button** — resets all four filters at once; appears only when at least one filter is active
 - Click any shop card to open a full detail modal
 - Save favorites with the heart button (persists after refresh)
 - Write personal notes per shop (autosaved to localStorage)
 - Drink of the day and matcha availability indicator on every card and modal
 - Full weekly hours with today's hours highlighted on each shop
-- Atlanta skyline background with glassmorphism cards and sidebar
+- Atlanta skyline background with glassmorphism cards; coffee-bean photo header banner
+- Real neighborhood photos sourced from Wikimedia Commons (CC-licensed) replace generic stock images
 - Log In and Sign Up via a tabbed auth modal (mock UI, ready for backend integration)
 
 ---
@@ -52,7 +58,7 @@ A personal coffee enthusiast web app for discovering and tracking coffee shops a
     │   ├── useFavorites.ts    # favorites: string[], toggleFavorite(id)
     │   └── useNotes.ts        # notes: Record<string, string>, setNote(id, text)
     └── components/
-        ├── FilterBar.tsx         # Vertical sidebar: neighborhood list with per-neighborhood counts
+        ├── FilterBar.tsx         # Horizontal filter bar: search, neighborhood dropdown, matcha toggle, open-now toggle, clear-all button
         ├── NeighborhoodGrid.tsx  # Landing page: photo card per neighborhood, routes into shop view
         ├── ShopCard.tsx          # Card: image, name, rating, drink of day, matcha, hours, favorite
         ├── ShopGrid.tsx          # Responsive grid of ShopCards with empty state
@@ -265,6 +271,50 @@ npm run build    # Type-check + production build → dist/
 npm run preview  # Serve the production build locally
 npm run lint     # Run ESLint
 ```
+
+---
+
+### 16. Replace stock images with real Atlanta neighborhood photos
+
+All neighborhood images in `src/data/neighborhoods.ts` were replaced. The previous Unsplash stock photos (generic city/suburb scenes) were swapped out for real photos of each specific Atlanta neighborhood, sourced from Wikimedia Commons under Creative Commons licenses (CC BY-SA or CC0). Each image shows an actual landmark, streetscape, or iconic view from that neighborhood.
+
+| Neighborhood | Photo subject |
+|---|---|
+| Decatur | Decatur Square and historic courthouse |
+| Inman Park | Beath-Dickey House (1890 Queen Anne Victorian on Euclid Ave) |
+| Old Fourth Ward | Krog Street Market on the Atlanta BeltLine |
+| West End | The Wren's Nest (Joel Chandler Harris House, National Historic Landmark) |
+| Kirkwood | Historic Kirkwood School building |
+| Midtown | Skyline from Lake Clara Meer in Piedmont Park |
+| Ponce City Market | Historic Sears warehouse building exterior |
+| Buckhead | Buckhead skyline panorama |
+| Grant Park | Augusta Avenue Victorian streetscape |
+| Smyrna | Smyrna Market Village fountain plaza |
+| East Atlanta | Fire Station No. 13 in East Atlanta Village |
+| Summerhill | Summerhill neighborhood street scene |
+| Virginia-Highland | Lanier Boulevard Parkway tree-lined streets |
+
+The header banner was also updated from a flat amber background (`bg-amber-900/80`) to a full-width coffee-bean photo with a semi-transparent dark overlay for text readability.
+
+---
+
+### 17. Replace vertical sidebar with horizontal filter bar; add Clear All
+
+**`FilterBar.tsx`** was completely rewritten. The old vertical left sidebar (neighborhood list only) was replaced with a full-width horizontal filter bar below the header containing four controls:
+
+- **Search input** — `<input type="search">` that filters by shop name, neighborhood, description, and address (case-insensitive substring match)
+- **Neighborhood dropdown** — `<select>` with all unique neighborhoods derived from the shop list; defaults to "All Neighborhoods"
+- **Matcha toggle** — button with `aria-pressed`; highlights green when active; filters to shops where `offersMatcha === true`
+- **Open Now toggle** — button with `aria-pressed`; highlights amber when active; filters to shops currently within their operating hours based on the client's local time
+- **Clear filters button** — appears only when at least one filter is active; resets all four filters to their default state at once
+
+**`App.tsx`** was updated to match:
+- Added `searchText`, `matchaOnly`, and `openNow` state alongside the existing `selectedNeighborhood`
+- Added `parseTime()` helper (parses `"7:00 AM"` → minutes since midnight) and `isShopOpenNow()` (reads today's hours string, handles midnight-crossing ranges, returns boolean)
+- `filteredShops` now applies all four filters in combination
+- `hasActiveFilters` boolean drives whether the NeighborhoodGrid (browse mode) or ShopGrid (results mode) is shown
+- Layout changed from `flex` row (sidebar + main) to `flex col` (filter bar + full-width main)
+- Added a "no results" empty state when all filters combine to zero matches
 
 ---
 

@@ -1,18 +1,19 @@
 export const neighborhoodImages: Record<string, string> = {
-  'Decatur':            'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&auto=format&fit=crop',
-  'Inman Park':         'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop',
-  'Old Fourth Ward':    'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&auto=format&fit=crop',
-  'West End':           'https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=800&auto=format&fit=crop',
-  'Kirkwood':           'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&auto=format&fit=crop',
-  'Midtown':            'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&auto=format&fit=crop',
-  'Ponce City Market':  'https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&auto=format&fit=crop',
-  'Buckhead':           'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&auto=format&fit=crop',
-  'Grant Park':         'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&auto=format&fit=crop',
-  'Smyrna':             'https://images.unsplash.com/photo-1592595896616-c37162298647?w=800&auto=format&fit=crop',
-  'East Atlanta':       'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&auto=format&fit=crop',
-  'Summerhill':         'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&auto=format&fit=crop',
-  'Virginia-Highland':  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop',
+  // All images sourced from Wikimedia Commons under Creative Commons licenses
+  'Decatur':            'https://upload.wikimedia.org/wikipedia/commons/1/14/Decatur_Square.JPG',
+  'Inman Park':         'https://upload.wikimedia.org/wikipedia/commons/1/14/Beath-Dickey_House_2011.jpg',
+  'Old Fourth Ward':    'https://upload.wikimedia.org/wikipedia/commons/a/a7/Krog_Street_Market.jpg',
+  'West End':           'https://upload.wikimedia.org/wikipedia/commons/f/f6/Wrens_nest_joel_chandler_harris_home.JPG',
+  'Kirkwood':           'https://upload.wikimedia.org/wikipedia/commons/6/6e/Kirkwood_School.jpg',
+  'Midtown':            'https://upload.wikimedia.org/wikipedia/commons/2/25/Midtown_Atlanta_skyline_from_Clara_Meer_in_Piedmont_Park.JPG',
+  'Ponce City Market':  'https://upload.wikimedia.org/wikipedia/commons/a/ae/Ponce_City_Market_1.JPG',
+  'Buckhead':           'https://upload.wikimedia.org/wikipedia/commons/c/c9/Buckhead2018_%28cropped%29.jpg',
+  'Grant Park':         'https://upload.wikimedia.org/wikipedia/commons/a/ac/Augusta_Avenue%2C_Grant_Park%2C_Atlanta%2C_GA.jpg',
+  'Smyrna':             'https://upload.wikimedia.org/wikipedia/commons/5/5b/Smyrna_Georgia_Market_Village.JPG',
+  'East Atlanta':       'https://upload.wikimedia.org/wikipedia/commons/4/43/Fire_Station_No._13_in_East_Atlanta_Village%2C_November_2015.jpg',
+  'Summerhill':         'https://upload.wikimedia.org/wikipedia/commons/7/7d/Summerhill%2C_Atlanta%2C_GA%2C_USA_-_panoramio_%284%29.jpg',
+  'Virginia-Highland':  'https://upload.wikimedia.org/wikipedia/commons/4/4e/Lanier_Boulevard_Parkway.JPG',
 };
 
 export const fallbackNeighborhoodImage =
-  'https://images.unsplash.com/photo-1575917649705-5b59aaa12e6b?w=800&auto=format&fit=crop';
+  'https://upload.wikimedia.org/wikipedia/commons/2/25/Midtown_Atlanta_skyline_from_Clara_Meer_in_Piedmont_Park.JPG';
