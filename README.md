@@ -318,6 +318,62 @@ The header banner was also updated from a flat amber background (`bg-amber-900/8
 
 ---
 
+---
+
+## Automated Weekly Shop Update Agent
+
+A GitHub Actions workflow runs every Monday at 9 AM ET and uses Claude to research the Atlanta specialty coffee scene, then opens a pull request with suggested additions and rating updates.
+
+### How it works
+
+1. The workflow (`/.github/workflows/update-shops.yml`) triggers on a weekly cron schedule (or manually via the Actions UI).
+2. It runs `scripts/update-shops.mjs`, which:
+   - Reads the current `src/data/shops.ts`
+   - Calls the Claude API (`claude-sonnet-4-6`) with the full shop list and instructions to suggest new shops + update ratings
+   - Parses Claude's JSON response and generates valid TypeScript
+   - Validates the output with `tsc --noEmit` before writing — if type errors are found, the original file is restored and the workflow fails
+3. If `shops.ts` changed, a pull request is opened for human review. **PRs never auto-merge.**
+
+### Setup required
+
+Add your Anthropic API key as a GitHub Actions secret:
+
+1. Go to **Settings → Secrets and variables → Actions** in your GitHub repo
+2. Click **New repository secret**
+3. Name: `ANTHROPIC_API_KEY`, Value: your key from [console.anthropic.com](https://console.anthropic.com)
+
+### Running the agent locally
+
+```bash
+ANTHROPIC_API_KEY=your-key-here node scripts/update-shops.mjs
+```
+
+### Triggering manually
+
+Go to **Actions → Weekly Coffee Shop Update → Run workflow** in the GitHub UI to trigger a run outside the weekly schedule.
+
+---
+
+### 18. Weekly shop update agent
+
+Added an automated agent that runs on a weekly GitHub Actions cron job to keep the shop list fresh.
+
+**`scripts/update-shops.mjs`** — the agent script:
+- Reads the current `shops.ts` and sends it to Claude (`claude-sonnet-4-6`) along with instructions to research the Atlanta coffee scene
+- Claude returns a JSON array of all shops (existing + new suggestions + any rating updates)
+- The script generates TypeScript from the JSON using a template function, validates it with `tsc --noEmit`, and writes the file — or restores the original if type errors are found
+- Exits non-zero on any failure so the GitHub Actions workflow won't create a PR with broken data
+
+**`.github/workflows/update-shops.yml`** — the workflow:
+- Runs every Monday at 9 AM ET via cron; also triggerable manually from the GitHub Actions UI
+- Checks out the repo, runs `npm ci`, then runs the agent script
+- If `shops.ts` changed, opens a pull request with a review checklist — **never auto-merges**
+- Requires `ANTHROPIC_API_KEY` stored as a GitHub Actions repository secret
+
+**`package.json`** — added `@anthropic-ai/sdk` as a devDependency (installed by `npm ci` in CI).
+
+---
+
 ## Future: Google Places API Integration
 
 The data model is ready for live data. To upgrade:
